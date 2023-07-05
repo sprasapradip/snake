@@ -19,6 +19,10 @@ WINDOW_SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
 window = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption("Snake Game")
 
+# Load the background image
+background_image = pygame.image.load("background.jpg")
+background_image = pygame.transform.scale(background_image, WINDOW_SIZE)
+
 # Set the snake and food size
 SNAKE_SIZE = 20
 FOOD_SIZE = 20
@@ -68,6 +72,7 @@ def game_over(score):
     """Display the game over message and restart or quit the game"""
     while True:
         window.fill(BLACK)
+        window.blit(background_image, (0, 0))
         message("Game Over!", RED)
         display_score(score, True)
         pygame.display.update()
@@ -136,7 +141,7 @@ def game_loop():
             game_over(score)
 
         # Update the game window
-        window.fill(BLACK)
+        window.blit(background_image, (0, 0))
         draw_border()
         draw_snake(snake_body)
         draw_food(food_position)
@@ -173,6 +178,7 @@ def start_menu():
     """Display the start menu and handle options"""
     while True:
         window.fill(BLACK)
+        window.blit(background_image, (0, 0))
         message("Snake Game", GREEN)
         display_score(0, False)
         pygame.display.update()
