@@ -34,8 +34,9 @@ TONGUE_SIZE = 5
 # Set the game clock
 clock = pygame.time.Clock()
 
-# Set the font for displaying score
+# Set the font for displaying score and messages
 font_style = pygame.font.SysFont(None, 50)
+small_font_style = pygame.font.SysFont(None, 30)
 
 
 def display_score(score, game_over_flag):
@@ -69,12 +70,13 @@ def draw_border():
 
 
 def game_over(score):
-    """Display the game over message and restart or quit the game"""
+    """Display the game over message and handle options"""
     while True:
         window.fill(BLACK)
         window.blit(background_image, (0, 0))
-        message("Game Over!", RED)
+        message("Game Over!", RED, -50)
         display_score(score, True)
+        message("Press Q to Quit or P to Play Again", WHITE, 50)
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -82,14 +84,18 @@ def game_over(score):
                 pygame.quit()
                 return
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    return
+                elif event.key == pygame.K_p:
                     game_loop()
 
 
-def message(msg, color):
+def message(msg, color, y_displacement=0):
     """Display a message on the game window"""
     text = font_style.render(msg, True, color)
-    window.blit(text, [WINDOW_WIDTH / 6, WINDOW_HEIGHT / 3])
+    text_rect = text.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + y_displacement))
+    window.blit(text, text_rect)
 
 
 def game_loop():
@@ -179,8 +185,8 @@ def start_menu():
     while True:
         window.fill(BLACK)
         window.blit(background_image, (0, 0))
-        message("Snake Game", GREEN)
-        display_score(0, False)
+        message("Snake Game", GREEN, -50)
+        message("Press P to Play", WHITE, 50)
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -190,9 +196,6 @@ def start_menu():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     game_loop()
-                elif event.key == pygame.K_q:
-                    pygame.quit()
-                    return
 
 
 # Start the game
