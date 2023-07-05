@@ -160,6 +160,7 @@ def game_loop():
     # Quit the game
     pygame.quit()
 
+# boarder is added 
 
 # Start the game loop
 game_loop()
