@@ -27,9 +27,6 @@ FOOD_SIZE = 20
 EYE_SIZE = 5
 TONGUE_SIZE = 5
 
-# Set the score board size
-SCORE_BOARD_HEIGHT = 50
-
 # Set the game clock
 clock = pygame.time.Clock()
 
@@ -37,13 +34,11 @@ clock = pygame.time.Clock()
 font_style = pygame.font.SysFont(None, 50)
 
 
-def display_score(score):
+def display_score(score, game_over_flag):
     """Display the score on the game window"""
-    score_text = font_style.render("Score: " + str(score), True, WHITE)
-    score_board = pygame.Surface((WINDOW_WIDTH, SCORE_BOARD_HEIGHT))
-    score_board.fill(BLACK)
-    score_board.blit(score_text, [10, 10])
-    window.blit(score_board, (0, 0))
+    if game_over_flag:
+        score_text = font_style.render("Score: " + str(score), True, WHITE)
+        window.blit(score_text, [10, 10])
 
 
 def draw_snake(snake_body):
@@ -69,12 +64,21 @@ def draw_border():
     pygame.draw.rect(window, WHITE, [WINDOW_WIDTH - SNAKE_SIZE, 0, SNAKE_SIZE, WINDOW_HEIGHT])
 
 
-def game_over():
-    """Display the game over message and restart the game"""
-    message("Game Over!", RED)
-    pygame.display.update()
-    time.sleep(2)
-    game_loop()
+def game_over(score):
+    """Display the game over message and restart or quit the game"""
+    while True:
+        window.fill(BLACK)
+        message("Game Over!", RED)
+        display_score(score, True)
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    game_loop()
 
 
 def message(msg, color):
@@ -107,7 +111,8 @@ def game_loop():
     while not game_over_flag:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                game_over_flag = True
+                pygame.quit()
+                return
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     x_change = -SNAKE_SIZE
@@ -127,15 +132,15 @@ def game_loop():
         y += y_change
 
         # Check for collision with the boundaries of the game window
-        if x >= WINDOW_WIDTH or x < 0 or y >= WINDOW_HEIGHT or y < SCORE_BOARD_HEIGHT:
-            game_over()
+        if x >= WINDOW_WIDTH or x < 0 or y >= WINDOW_HEIGHT or y < 0:
+            game_over(score)
 
         # Update the game window
         window.fill(BLACK)
         draw_border()
         draw_snake(snake_body)
         draw_food(food_position)
-        display_score(score)
+        display_score(score, False)
 
         # Update the snake body
         snake_head = []
@@ -148,7 +153,7 @@ def game_loop():
         # Check for collision with the snake's body
         for part in snake_body[:-1]:
             if part == snake_head:
-                game_over()
+                game_over(score)
 
         # Check for collision with the food
         if x == food_position[0] and y == food_position[1]:
@@ -163,9 +168,26 @@ def game_loop():
         # Set the game speed
         clock.tick(snake_speed)
 
-    # Quit the game
-    pygame.quit()
+
+def start_menu():
+    """Display the start menu and handle options"""
+    while True:
+        window.fill(BLACK)
+        message("Snake Game", GREEN)
+        display_score(0, False)
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    game_loop()
+                elif event.key == pygame.K_q:
+                    pygame.quit()
+                    return
 
 
-# Start the game loop
-game_loop()
+# Start the game
+start_menu()
