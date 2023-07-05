@@ -23,6 +23,10 @@ pygame.display.set_caption("Snake Game")
 SNAKE_SIZE = 20
 FOOD_SIZE = 20
 
+# Set the eye and tongue size
+EYE_SIZE = 5
+TONGUE_SIZE = 5
+
 # Set the game clock
 clock = pygame.time.Clock()
 
@@ -40,11 +44,23 @@ def draw_snake(snake_body):
     """Draw the snake on the game window"""
     for snake_part in snake_body:
         pygame.draw.rect(window, GREEN, [snake_part[0], snake_part[1], SNAKE_SIZE, SNAKE_SIZE])
+        pygame.draw.circle(window, BLACK, [snake_part[0] + SNAKE_SIZE // 4, snake_part[1] + SNAKE_SIZE // 4], EYE_SIZE)
+        pygame.draw.circle(window, BLACK, [snake_part[0] + SNAKE_SIZE // 4 * 3, snake_part[1] + SNAKE_SIZE // 4], EYE_SIZE)
+        pygame.draw.rect(window, RED, [snake_part[0] + SNAKE_SIZE // 2 - TONGUE_SIZE // 2,
+                                        snake_part[1] + SNAKE_SIZE, TONGUE_SIZE, SNAKE_SIZE // 2])
 
 
 def draw_food(food_position):
     """Draw the food on the game window"""
     pygame.draw.rect(window, RED, [food_position[0], food_position[1], FOOD_SIZE, FOOD_SIZE])
+
+
+def draw_border():
+    """Draw the border around the game window"""
+    pygame.draw.rect(window, WHITE, [0, 0, WINDOW_WIDTH, SNAKE_SIZE])
+    pygame.draw.rect(window, WHITE, [0, 0, SNAKE_SIZE, WINDOW_HEIGHT])
+    pygame.draw.rect(window, WHITE, [0, WINDOW_HEIGHT - SNAKE_SIZE, WINDOW_WIDTH, SNAKE_SIZE])
+    pygame.draw.rect(window, WHITE, [WINDOW_WIDTH - SNAKE_SIZE, 0, SNAKE_SIZE, WINDOW_HEIGHT])
 
 
 def game_over():
@@ -110,6 +126,7 @@ def game_loop():
 
         # Update the game window
         window.fill(BLACK)
+        draw_border()
         draw_snake(snake_body)
         draw_food(food_position)
         display_score(score)
