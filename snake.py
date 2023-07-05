@@ -27,6 +27,9 @@ FOOD_SIZE = 20
 EYE_SIZE = 5
 TONGUE_SIZE = 5
 
+# Set the score board size
+SCORE_BOARD_HEIGHT = 50
+
 # Set the game clock
 clock = pygame.time.Clock()
 
@@ -37,7 +40,10 @@ font_style = pygame.font.SysFont(None, 50)
 def display_score(score):
     """Display the score on the game window"""
     score_text = font_style.render("Score: " + str(score), True, WHITE)
-    window.blit(score_text, [10, 10])
+    score_board = pygame.Surface((WINDOW_WIDTH, SCORE_BOARD_HEIGHT))
+    score_board.fill(BLACK)
+    score_board.blit(score_text, [10, 10])
+    window.blit(score_board, (0, 0))
 
 
 def draw_snake(snake_body):
@@ -121,7 +127,7 @@ def game_loop():
         y += y_change
 
         # Check for collision with the boundaries of the game window
-        if x >= WINDOW_WIDTH or x < 0 or y >= WINDOW_HEIGHT or y < 0:
+        if x >= WINDOW_WIDTH or x < 0 or y >= WINDOW_HEIGHT or y < SCORE_BOARD_HEIGHT:
             game_over()
 
         # Update the game window
@@ -160,7 +166,6 @@ def game_loop():
     # Quit the game
     pygame.quit()
 
-# boarder is added 
 
 # Start the game loop
 game_loop()
