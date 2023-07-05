@@ -20,7 +20,7 @@ window = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption("Snake Game")
 
 # Load the background image
-background_image = pygame.image.load("background.jpg")
+background_image = pygame.image.load("sprasa_city.png")
 background_image = pygame.transform.scale(background_image, WINDOW_SIZE)
 
 # Set the snake and food size
